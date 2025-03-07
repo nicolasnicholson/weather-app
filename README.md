@@ -100,8 +100,10 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Live Demo 🌐
 
-Check out the live demo: [Weather App Live](#) <!-- Replace with your deployed app URL -->
+Check out the live demo: [Weather App Live](https://weather-app-kappa-blond-24.vercel.app/)
 
 ---
 
-Made with ❤️ by **Your Name**
+## About the Creator 🚀
+
+Created by [Nicolás Nicholson](https://www.linkedin.com/in/nicolasnicholson).
