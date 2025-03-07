@@ -141,29 +141,35 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Weather App</h1>
-      <div className="flex justify-center gap-2 mb-6">
-        <SearchBar onSearch={handleSearch} />
-        <button
-          onClick={handleRandomCity}
-          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-        >
-          Random City
-        </button>
-      </div>
-      {loading && <p className="text-center">Loading...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      <div className="max-w-md mx-auto">
-        {weatherData && <WeatherCard data={weatherData} />}
-      </div>
-      <div className="mt-6">
-        <h2 className="text-xl text-center font-bold mb-4 uppercase">7-Day Forecast</h2>
-        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-          {forecastData.slice(0, 7).map((day, index) => (
-            <ForecastCard key={index} data={day} />
-          ))}
-        </div>
+    <div className='flex justify-center items-center h-screen'>
+      <div className="container mx-auto p-4">
+        <header>
+          <h1 className="text-2xl font-bold mb-4 text-center">Weather App</h1>
+        </header>
+        <main>
+          <section className="flex justify-center gap-2 mb-6">
+            <SearchBar onSearch={handleSearch} />
+            <button
+              onClick={handleRandomCity}
+              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              Random City
+            </button>
+          </section>
+          {loading && <p className="text-center">Loading...</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
+          <section className="max-w-md mx-auto">
+            {weatherData && <WeatherCard data={weatherData} />}
+          </section>
+          <section className="mt-6">
+            <h2 className="text-xl text-center font-bold mb-4 uppercase">7-Day Forecast</h2>
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+              {forecastData.slice(0, 7).map((day, index) => (
+                <ForecastCard key={index} data={day} />
+              ))}
+            </div>
+          </section>
+        </main>
       </div>
     </div>
   );
