@@ -106,4 +106,4 @@ Check out the live demo: [Weather App Live](https://weather-app-kappa-blond-24.v
 
 ## About the Creator 🚀
 
-Created by [Nicolás Nicholson](https://www.linkedin.com/in/nicolasnicholson).
+Created by [Nicolás Nicholson](https://www.linkedin.com/in/nicolasnicholson)
