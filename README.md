@@ -2,7 +2,7 @@
 
 A modern weather application built with **TypeScript**, **React**, and **Tailwind CSS**. Check the current weather and 7-day forecast for any city in the world.
 
-![Weather App Screenshot](./screenshot.png) <!-- Add a screenshot of your app here -->
+![Weather App Screenshot](./public/screenshot.png) <!-- Add a screenshot of your app here -->
 
 ---
 
