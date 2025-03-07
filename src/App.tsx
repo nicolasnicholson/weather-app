@@ -42,7 +42,7 @@ interface ForecastData {
 const App: React.FC = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [forecastData, setForecastData] = useState<ForecastData[]>([]);
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState<string>(''); // Ahora se usa en el renderizado
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -54,7 +54,7 @@ const App: React.FC = () => {
       }
       return acc;
     }, []);
-    return dailyData.slice(0, 7); // Mostrar solo 7 días
+    return dailyData.slice(0, 7);
   };
 
   const getWeather = async (city: string): Promise<WeatherData> => {
@@ -67,16 +67,6 @@ const App: React.FC = () => {
     return groupForecastByDay(response.data.list);
   };
 
-  const getWeatherByLocation = async (lat: number, lon: number): Promise<WeatherData> => {
-    const response = await axios.get(`${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
-    return response.data;
-  };
-
-  const getForecastByLocation = async (lat: number, lon: number): Promise<ForecastData[]> => {
-    const response = await axios.get(`${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
-    return groupForecastByDay(response.data.list);
-  };
-
   const handleSearch = async (city: string) => {
     setLoading(true);
     setError('');
@@ -85,7 +75,7 @@ const App: React.FC = () => {
       const forecast = await getForecast(city);
       setWeatherData(weather);
       setForecastData(forecast);
-      setCity(city);
+      setCity(weather.name); // Se asegura de que la ciudad se actualice correctamente
     } catch (error) {
       setError('Error fetching weather data. Please try again.');
       console.error('Error fetching weather data:', error);
@@ -94,7 +84,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleRandomCity = async () => {
+  const handleRandomCity = () => {
     const randomCity = cities[Math.floor(Math.random() * cities.length)];
     handleSearch(randomCity);
   };
@@ -104,34 +94,30 @@ const App: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        // Obtener clima y pronóstico para la ubicación actual
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(async (position) => {
-            const { latitude, longitude } = position.coords;
-            const locationWeather = await getWeatherByLocation(latitude, longitude);
-            const locationForecast = await getForecastByLocation(latitude, longitude);
-            setWeatherData(locationWeather);
-            setForecastData(locationForecast);
-            setCity(locationWeather.name);
-          }, async () => {
-            // Si el usuario no otorga permisos, cargar Nueva York por defecto
-            const defaultWeather = await getWeather('New York');
-            const defaultForecast = await getForecast('New York');
-            setWeatherData(defaultWeather);
-            setForecastData(defaultForecast);
-            setCity('New York');
-          });
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+              const response = await axios.get(
+                `${BASE_URL}/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+              );
+              const forecastResponse = await axios.get(
+                `${BASE_URL}/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+              );
+
+              setWeatherData(response.data);
+              setForecastData(groupForecastByDay(forecastResponse.data.list));
+              setCity(response.data.name);
+            },
+            async () => {
+              await handleSearch('New York'); // Si el usuario no otorga permisos, cargar NY por defecto
+            }
+          );
         } else {
-          // Si el navegador no soporta geolocalización, cargar Nueva York por defecto
-          const defaultWeather = await getWeather('New York');
-          const defaultForecast = await getForecast('New York');
-          setWeatherData(defaultWeather);
-          setForecastData(defaultForecast);
-          setCity('New York');
+          await handleSearch('New York');
         }
       } catch (error) {
         setError('Error fetching weather data. Please try again.');
-        console.error('Error fetching weather data:', error);
       } finally {
         setLoading(false);
       }
@@ -141,7 +127,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className="flex justify-center items-center h-screen">
       <div className="container mx-auto p-4">
         <header>
           <h1 className="text-2xl font-bold mb-4 text-center">Weather App</h1>
@@ -156,11 +142,19 @@ const App: React.FC = () => {
               Random City
             </button>
           </section>
+
           {loading && <p className="text-center">Loading...</p>}
           {error && <p className="text-center text-red-500">{error}</p>}
+
+          <section className="text-center mb-4">
+            {/* {city && <p className="text-lg font-semibold">Current city: {city}</p>} */}
+            {city ? "": ""}
+          </section>
+
           <section className="max-w-md mx-auto">
             {weatherData && <WeatherCard data={weatherData} />}
           </section>
+
           <section className="mt-6">
             <h2 className="text-xl text-center font-bold mb-4 uppercase">7-Day Forecast</h2>
             <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
